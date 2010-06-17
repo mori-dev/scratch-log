@@ -55,7 +55,7 @@
   (write-region (point-min) (point-max) sl-prev-scratch-string-file))
 
 (defun sl-append-scratch-log-file ()
-  (let* ((time (format-time-string "** %Y/%m/%d-%H:%m" (current-time)))
+  (let* ((time (format-time-string "* %Y/%m/%d-%H:%m" (current-time)))
          (buf-str (buffer-substring-no-properties (point-min) (point-max)))
          (contents (concat "\n" time "\n" buf-str)))
     (with-current-buffer (get-buffer-create "tmp")
