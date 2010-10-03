@@ -24,7 +24,7 @@
 ;; Put this file into load-path'ed directory, and byte compile it if
 ;; desired.  And put the following expression into your ~/.emacs.
 ;;
-;; (require 'scratch-log.el)
+;; (require 'scratch-log)
 
 ;;; Change Log
 
@@ -115,4 +115,4 @@ How to send a bug report:
    nil nil
    scratch-log-bug-report-salutation))
 
-(provide 'scratch-log.el)
+(provide 'scratch-log)
