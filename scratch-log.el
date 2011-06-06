@@ -58,8 +58,7 @@
   (let* ((time (format-time-string "* %Y/%m/%d-%H:%m" (current-time)))
          (buf-str (buffer-substring-no-properties (point-min) (point-max)))
          (contents (concat "\n" time "\n" buf-str)))
-    (with-current-buffer (get-buffer-create "tmp")
-      (erase-buffer)
+    (with-temp-buffer
       (insert contents)
       (append-to-file (point-min) (point-max) sl-scratch-log-file))))
 
