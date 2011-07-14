@@ -38,6 +38,16 @@
 (defvar sl-restore-scratch-p t)
 (defvar sl-prohibit-kill-scratch-buffer-p t)
 
+(defmacro sl-aif (test-form then-form &rest else-forms)
+  (declare (indent 2))
+  `(let ((it ,test-form))
+     (if it ,then-form ,@else-forms)))
+
+(defmacro* sl-awhen (test-form &body body)
+  (declare (indent 1))
+  `(sl-aif ,test-form
+       (progn ,@body)))
+
 (defun sl-dump-scratch-when-kill-buf ()
   (interactive)
   (when (string= "*scratch*" (buffer-name))
@@ -46,7 +56,7 @@
 
 (defun sl-dump-scratch-when-kill-emacs ()
   (interactive)
-  (sl-awhen (get-buffer "*scratch*")  
+  (sl-awhen (get-buffer "*scratch*")
     (with-current-buffer it
       (sl-make-prev-scratch-string-file)
       (sl-append-scratch-log-file))))
@@ -72,17 +82,6 @@
 
 (defun sl-scratch-buffer-p ()
   (if (string= "*scratch*" (buffer-name)) nil t))
-
-;; Utility
-(defmacro sl-aif (test-form then-form &rest else-forms)
-  (declare (indent 2))
-  `(let ((it ,test-form))
-     (if it ,then-form ,@else-forms)))
-
-(defmacro* sl-awhen (test-form &body body)
-  (declare (indent 1))
-  `(sl-aif ,test-form
-       (progn ,@body)))
 
 (add-hook 'kill-buffer-hook 'sl-dump-scratch-when-kill-buf)
 (add-hook 'kill-emacs-hook 'sl-dump-scratch-when-kill-emacs)
@@ -110,7 +109,7 @@ How to send a bug report:
   (reporter-submit-bug-report
    scratch-log-maintainer-mail-address
    "scratch-log.el"
-   (apropos-internal "^eldoc-" 'boundp)
+   (apropos-internal "^sl-" 'boundp)
    nil nil
    scratch-log-bug-report-salutation))
 
