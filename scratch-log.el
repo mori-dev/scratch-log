@@ -46,7 +46,7 @@
 
 (defun sl-dump-scratch-when-kill-emacs ()
   (interactive)
-  (sl-awhen (get-buffer "*scratch*")  
+  (sl-awhen (get-buffer "*scratch*")
     (with-current-buffer it
       (sl-make-prev-scratch-string-file)
       (sl-append-scratch-log-file))))
@@ -110,7 +110,7 @@ How to send a bug report:
   (reporter-submit-bug-report
    scratch-log-maintainer-mail-address
    "scratch-log.el"
-   (apropos-internal "^eldoc-" 'boundp)
+   (apropos-internal "^sl-" 'boundp)
    nil nil
    scratch-log-bug-report-salutation))
 
