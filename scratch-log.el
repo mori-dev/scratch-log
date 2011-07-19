@@ -37,6 +37,8 @@
 (defvar sl-prev-scratch-string-file "~/.emacs.d/.scratch-log-prev")
 (defvar sl-restore-scratch-p t)
 (defvar sl-prohibit-kill-scratch-buffer-p t)
+(defvar sl-use-timer t)
+(defvar sl-timer-interval 30 "*Seconds of timer interval.")
 
 (defun sl-dump-scratch-when-kill-buf ()
   (interactive)
@@ -50,6 +52,12 @@
     (with-current-buffer it
       (sl-make-prev-scratch-string-file)
       (sl-append-scratch-log-file))))
+
+(defun sl-dump-scratch-for-timer ()
+  (interactive)
+  (sl-awhen (get-buffer "*scratch*")  
+    (with-current-buffer it
+      (sl-make-prev-scratch-string-file))))
 
 (defun sl-make-prev-scratch-string-file ()
   (write-region (point-min) (point-max) sl-prev-scratch-string-file))
@@ -89,6 +97,8 @@
 (add-hook 'emacs-startup-hook 'sl-restore-scratch)
 (when sl-prohibit-kill-scratch-buffer-p
   (add-hook 'kill-buffer-query-functions 'sl-scratch-buffer-p))
+(when sl-use-timer
+  (run-with-idle-timer sl-timer-interval t 'sl-dump-scratch-for-timer))
 
 ;;;; Bug report
 (defvar scratch-log-maintainer-mail-address
