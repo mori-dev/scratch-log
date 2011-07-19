@@ -39,6 +39,7 @@
 (defvar sl-prohibit-kill-scratch-buffer-p t)
 (defvar sl-use-timer t)
 (defvar sl-timer-interval 30 "*Seconds of timer interval.")
+(defvar it nil)
 
 (defun sl-dump-scratch-when-kill-buf ()
   (interactive)
