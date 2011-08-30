@@ -49,16 +49,28 @@
 
 (defun sl-dump-scratch-when-kill-emacs ()
   (interactive)
-  (sl-awhen (get-buffer "*scratch*")  
+  (sl-awhen (get-buffer "*scratch*")
     (with-current-buffer it
       (sl-make-prev-scratch-string-file)
       (sl-append-scratch-log-file))))
 
 (defun sl-dump-scratch-for-timer ()
   (interactive)
-  (sl-awhen (get-buffer "*scratch*")  
-    (with-current-buffer it
-      (sl-make-prev-scratch-string-file))))
+  (if (sl-need-to-save)
+      (sl-awhen (get-buffer "*scratch*")
+	(with-current-buffer it
+	  (sl-make-prev-scratch-string-file)))))
+
+(defun sl-need-to-save ()
+  (sl-awhen (get-buffer "*scratch*")
+    (let ((scratch-point-max (with-current-buffer it (point-max))))
+      (with-temp-buffer
+	(insert-file-contents sl-prev-scratch-string-file)
+	(or (not (eq (point-max) scratch-point-max))
+	    (not (eq (compare-buffer-substrings
+		      (current-buffer) 0 (point-max)
+		      it 0 scratch-point-max)
+		     0)))))))
 
 (defun sl-make-prev-scratch-string-file ()
   (write-region (point-min) (point-max) sl-prev-scratch-string-file))
