@@ -33,14 +33,28 @@
 (eval-when-compile
   (require 'cl))
 
+
 (defvar sl-scratch-log-file "~/.emacs.d/.scratch-log")
 (defvar sl-prev-scratch-string-file "~/.emacs.d/.scratch-log-prev")
 (defvar sl-restore-scratch-p t)
 (defvar sl-prohibit-kill-scratch-buffer-p t)
 (defvar sl-use-timer t)
 (defvar sl-timer-interval 30 "*Seconds of timer interval.")
-(defvar it nil)
 
+
+;; Utility
+(defmacro sl-aif (test-form then-form &rest else-forms)
+  (declare (indent 2))
+  `(let ((it ,test-form))
+     (if it ,then-form ,@else-forms)))
+
+(defmacro* sl-awhen (test-form &body body)
+  (declare (indent 1))
+  `(sl-aif ,test-form
+       (progn ,@body)))
+
+
+;; main
 (defun sl-dump-scratch-when-kill-buf ()
   (interactive)
   (when (string= "*scratch*" (buffer-name))
@@ -58,19 +72,19 @@
   (interactive)
   (if (sl-need-to-save)
       (sl-awhen (get-buffer "*scratch*")
-	(with-current-buffer it
-	  (sl-make-prev-scratch-string-file)))))
+        (with-current-buffer it
+          (sl-make-prev-scratch-string-file)))))
 
 (defun sl-need-to-save ()
   (sl-awhen (get-buffer "*scratch*")
     (let ((scratch-point-max (with-current-buffer it (point-max))))
       (with-temp-buffer
-	(insert-file-contents sl-prev-scratch-string-file)
-	(or (not (eq (point-max) scratch-point-max))
-	    (not (eq (compare-buffer-substrings
-		      (current-buffer) 0 (point-max)
-		      it 0 scratch-point-max)
-		     0)))))))
+        (insert-file-contents sl-prev-scratch-string-file)
+        (or (not (eq (point-max) scratch-point-max))
+            (not (eq (compare-buffer-substrings
+                      (current-buffer) 0 (point-max)
+                      it 0 scratch-point-max)
+                     0)))))))
 
 (defun sl-make-prev-scratch-string-file ()
   (write-region (point-min) (point-max) sl-prev-scratch-string-file))
@@ -93,17 +107,6 @@
 
 (defun sl-scratch-buffer-p ()
   (if (string= "*scratch*" (buffer-name)) nil t))
-
-;; Utility
-(defmacro sl-aif (test-form then-form &rest else-forms)
-  (declare (indent 2))
-  `(let ((it ,test-form))
-     (if it ,then-form ,@else-forms)))
-
-(defmacro* sl-awhen (test-form &body body)
-  (declare (indent 1))
-  `(sl-aif ,test-form
-       (progn ,@body)))
 
 (add-hook 'kill-buffer-hook 'sl-dump-scratch-when-kill-buf)
 (add-hook 'kill-emacs-hook 'sl-dump-scratch-when-kill-emacs)
