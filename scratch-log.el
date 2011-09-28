@@ -42,7 +42,7 @@
 (defvar sl-timer-interval 30 "*Seconds of timer interval.")
 
 
-;; Utility
+;; utility
 (defmacro sl-aif (test-form then-form &rest else-forms)
   (declare (indent 2))
   `(let ((it ,test-form))
@@ -87,7 +87,7 @@
                      0)))))))
 
 (defun sl-make-prev-scratch-string-file ()
-  (write-region (point-min) (point-max) sl-prev-scratch-string-file))
+  (write-region (point-min) (point-max) sl-prev-scratch-string-file nil 'nomsg))
 
 (defun sl-append-scratch-log-file ()
   (let* ((time (format-time-string "* %Y/%m/%d-%H:%m" (current-time)))
@@ -95,7 +95,7 @@
          (contents (concat "\n" time "\n" buf-str)))
     (with-temp-buffer
       (insert contents)
-      (append-to-file (point-min) (point-max) sl-scratch-log-file))))
+      (write-region (point-min) (point-max) sl-scratch-log-file t 'nomsg))))
 
 (defun sl-restore-scratch ()
   (interactive)
