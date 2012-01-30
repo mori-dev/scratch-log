@@ -1,4 +1,4 @@
-;;; scratch-log.el --- ???
+;;; scratch-log.el --- Utility for *scratch* buffer.
 
 ;; Copyright (C) 2010 by kmori
 
