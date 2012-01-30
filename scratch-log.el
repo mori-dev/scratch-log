@@ -1,4 +1,4 @@
-;;; scratch-log.el
+;;; scratch-log.el --- ???
 
 ;; Copyright (C) 2010 by kmori
 
@@ -20,15 +20,20 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;; Install
+;;; Commentary:
+
+;;; Installation:
+
 ;; Put this file into load-path'ed directory, and byte compile it if
 ;; desired.  And put the following expression into your ~/.emacs.
 ;;
 ;; (require 'scratch-log)
 
-;;; Change Log
+;;; Change Log:
 
 ;; 0.0.1: scratch-log.el 0.0.1 released.
+
+;;; Code:
 
 (eval-when-compile
   (require 'cl))
