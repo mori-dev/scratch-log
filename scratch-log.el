@@ -114,12 +114,14 @@
   (if (string= "*scratch*" (buffer-name)) nil t))
 
 
+(add-hook 'kill-buffer-hook 'sl-dump-scratch-when-kill-buf)
+(add-hook 'kill-emacs-hook 'sl-dump-scratch-when-kill-emacs)
+(add-hook 'emacs-startup-hook 'sl-restore-scratch)
+
+
 ;;;###autoload
 (defun scratch-log-start ()
   (interactive)
-  (add-hook 'kill-buffer-hook 'sl-dump-scratch-when-kill-buf)
-  (add-hook 'kill-emacs-hook 'sl-dump-scratch-when-kill-emacs)
-  (add-hook 'emacs-startup-hook 'sl-restore-scratch)
   (when sl-prohibit-kill-scratch-buffer-p
     (add-hook 'kill-buffer-query-functions 'sl-scratch-buffer-p))
   (when sl-use-timer
