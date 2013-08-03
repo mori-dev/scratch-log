@@ -87,8 +87,8 @@
         (insert-file-contents sl-prev-scratch-string-file)
         (or (not (eq (point-max) scratch-point-max))
             (not (eq (compare-buffer-substrings
-                      (current-buffer) 0 (point-max)
-                      it 0 scratch-point-max)
+                      (current-buffer) (point-min) (point-max)
+                      it (point-min) scratch-point-max)
                      0)))))))
 
 (defun sl-make-prev-scratch-string-file ()
@@ -113,13 +113,19 @@
 (defun sl-scratch-buffer-p ()
   (if (string= "*scratch*" (buffer-name)) nil t))
 
+
 (add-hook 'kill-buffer-hook 'sl-dump-scratch-when-kill-buf)
 (add-hook 'kill-emacs-hook 'sl-dump-scratch-when-kill-emacs)
 (add-hook 'emacs-startup-hook 'sl-restore-scratch)
-(when sl-prohibit-kill-scratch-buffer-p
-  (add-hook 'kill-buffer-query-functions 'sl-scratch-buffer-p))
-(when sl-use-timer
-  (run-with-idle-timer sl-timer-interval t 'sl-dump-scratch-for-timer))
+
+
+;;;###autoload
+(defun scratch-log-start ()
+  (interactive)
+  (when sl-prohibit-kill-scratch-buffer-p
+    (add-hook 'kill-buffer-query-functions 'sl-scratch-buffer-p))
+  (when sl-use-timer
+    (run-with-idle-timer sl-timer-interval t 'sl-dump-scratch-for-timer)))
 
 ;;;; Bug report
 (defvar scratch-log-maintainer-mail-address
