@@ -87,8 +87,8 @@
         (insert-file-contents sl-prev-scratch-string-file)
         (or (not (eq (point-max) scratch-point-max))
             (not (eq (compare-buffer-substrings
-                      (current-buffer) 0 (point-max)
-                      it 0 scratch-point-max)
+                      (current-buffer) 1 (point-max)
+                      it 1 scratch-point-max)
                      0)))))))
 
 (defun sl-make-prev-scratch-string-file ()
